@@ -1,0 +1,53 @@
+*** sxwm.c	2026-06-13 16:37:25.557886642 +0200
+--- sxwm.c.quit.c	2026-06-13 16:31:35.540881362 +0200
+***************
+*** 1894,1907 ****
+  		}
+  	}
+  	*/
+  
+! 	XSync(dpy, False);
+! 	XFreeCursor(dpy, cursor_move);
+! 	XFreeCursor(dpy, cursor_normal);
+! 	XFreeCursor(dpy, cursor_resize);
+! 	XCloseDisplay(dpy);
+! 	puts("quitting...");
+! 	running = False;
+  }
+  
+  void reload_config(void)
+--- 1894,1927 ----
+  		}
+  	}
+  	*/
++   
++   /* BEGIN confirmed quit patch by nulgame */
++   /* rofi equired */
++   /* 2026-06-13 */
++   FILE *cq = popen(
++       "echo \"NO\nYES\" | rofi -dmenu -i -p \"Quit window manager? (or ESC) \" -theme-str 'window { width:60%; height:30%; border-color: rgba (255,0,0,100%);}'"
++       , "r");
++   if (cq != NULL) {
++     char buf[1024];
++     if (fgets(buf, sizeof(buf), cq) == NULL) {
++       fprintf(stderr, "sxwm: quit() -> error reading pipe!\n");
++       return;
++     }
++     pclose(cq);
++     if (strcmp(buf, "YES\n") == 0) {
+  
+!       XSync(dpy, False);
+!       XFreeCursor(dpy, cursor_move);
+!       XFreeCursor(dpy, cursor_normal);
+!       XFreeCursor(dpy, cursor_resize);
+!       XCloseDisplay(dpy);
+!       puts("quitting...");
+!       running = False;
+!     }
+!   }
+! 
+!   return;
+!   /* END confirmed quit patch by nulgame */
+  }
+  
+  void reload_config(void)
