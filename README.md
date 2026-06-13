@@ -17,7 +17,7 @@ patch sxwm.c < confirmedquit.patch
 
 ## Result
 
-quit function wil be as follow:
+After patching sxwm.c quit function will looks as follow:
 
 ```c
 void quit(void)
